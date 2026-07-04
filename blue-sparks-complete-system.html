@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Sparks Kalasamithi — Design System & Responsive Previews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#080B1A;
+    --bg-navy:#0E1330;
+    --card:rgba(255,255,255,0.045);
+    --card-border:rgba(255,255,255,0.09);
+    --gold:#CFA53B;
+    --gold-bright:#E8C766;
+    --royal:#3A5CFF;
+    --royal-soft:#5B7BFF;
+    --ink:#F3F4FA;
+    --ink-dim:#9CA3C2;
+    --ink-faint:#6B7295;
+    --green:#3FCB8B;
+    --orange:#E9A23B;
+    --red:#E85D5D;
+    --blue-done:#5B8DEF;
+    --divider: rgba(207,165,59,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(1200px 600px at 20% -10%, rgba(58,92,255,0.20), transparent 60%),
+                radial-gradient(900px 500px at 100% 0%, rgba(207,165,59,0.14), transparent 55%),
+                var(--bg-deep);
+    font-family:'Manrope',sans-serif;
+    color:var(--ink);
+  }
+
+  /* ========== DOCUMENTATION / TOKENS ========== */
+  .doc-header{
+    max-width:1400px; margin:0 auto; padding:48px 40px 32px;
+    text-align:center;
+  }
+  .doc-header h1{
+    font-family:'Fraunces',serif; font-size:42px; margin:0 0 8px; color:#fff;
+  }
+  .doc-header p{
+    font-size:16px; color:var(--ink-dim); margin:0;
+  }
+
+  /* tabs for viewing different breakpoints */
+  .device-tabs{
+    max-width:1400px; margin:0 auto; padding:0 40px 32px;
+    display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+  }
+  .device-tabs button{
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:13px;
+    letter-spacing:0.02em; color:var(--ink-dim); background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08); padding:11px 18px; border-radius:12px; cursor:pointer;
+    transition:all .2s ease;
+  }
+  .device-tabs button.active{ 
+    background:linear-gradient(135deg, var(--royal), #2540C9); color:#fff; 
+    box-shadow:0 4px 14px rgba(58,92,255,0.35);
+  }
+
+  .container{
+    max-width:1400px; margin:0 auto; padding:0 40px 100px;
+    display:none;
+  }
+  .container.active{ display:block;}
+
+  /* ========== DESKTOP LAYOUT ========== */
+  .desktop-login{
+    display:grid; grid-template-columns:1fr 1fr; gap:0; min-height:100vh;
+    background: linear-gradient(180deg, var(--bg-navy) 0%, var(--bg-deep) 100%);
+    border-radius:0;
+  }
+  .desktop-login .left{
+    padding:60px 56px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .desktop-login .right{
+    background:linear-gradient(135deg, rgba(58,92,255,0.1) 0%, rgba(207,165,59,0.05) 100%);
+    position:relative; overflow:hidden;
+  }
+  .desktop-login .right img{
+    width:100%; height:100%; object-fit:cover; object-position:50% 30%;
+    filter:saturate(1.08) contrast(1.05);
+  }
+  .desktop-login .right::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent 0%, rgba(8,11,26,0.4) 100%);
+  }
+
+  .desktop-brand{
+    display:flex; align-items:center; gap:14px; margin-bottom:48px;
+  }
+  .desktop-brand .glyph{
+    width:48px; height:48px; border-radius:14px;
+    background:linear-gradient(135deg, var(--gold-bright), var(--gold) 60%, #8a6a1e);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:700; font-size:22px; color:#1a1200;
+    box-shadow:0 8px 24px rgba(207,165,59,0.4);
+  }
+  .desktop-brand .txt{ font-family:'Fraunces',serif; font-size:18px; font-weight:600; color:#fff;}
+  .desktop-brand .txt span{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--gold-bright); text-transform:uppercase; margin-top:3px;}
+
+  .desktop-login-form{
+    max-width:380px;
+  }
+  .desktop-login-form h1{
+    font-family:'Fraunces',serif; font-size:32px; font-weight:600; margin:0 0 12px; color:#fff;
+  }
+  .desktop-login-form > p{
+    font-size:14px; color:var(--ink-dim); margin:0 0 32px; line-height:1.6;
+  }
+
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:11px; font-weight:700; color:var(--ink-dim); margin-bottom:8px; letter-spacing:0.03em; text-transform:uppercase;}
+  .field-input{
+    display:flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09);
+    border-radius:13px; padding:13px 16px; transition:all .2s;
+  }
+  .field-input:focus-within{ border-color:var(--royal-soft); box-shadow:0 0 0 3px rgba(91,123,255,0.18);}
+  .field-input input{
+    background:transparent; border:none; outline:none; color:var(--ink); font-size:15px;
+    font-family:'Manrope',sans-serif; width:100%;
+  }
+  .field-input input::placeholder{ color:var(--ink-faint); }
+  .field-input .ic{ color:var(--ink-faint); font-size:16px; flex-shrink:0; }
+  .toggle-eye{ cursor:pointer; color:var(--ink-faint); font-size:12px; font-weight:700; flex-shrink:0; user-select:none;}
+
+  .row-between{ display:flex; align-items:center; justify-content:space-between; margin:6px 0 24px;}
+  .remember{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-dim); }
+  .checkbox{ width:17px; height:17px; border-radius:5px; border:1.5px solid var(--ink-faint); display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.03);}
+  .checkbox.checked{ background:linear-gradient(135deg,var(--gold-bright),var(--gold)); border-color:var(--gold); color:#1a1200; font-size:10px; font-weight:900;}
+  .forgot{ font-size:13px; color:var(--royal-soft); font-weight:700; text-decoration:none; }
+
+  .btn-primary{
+    width:100%; padding:15px; border:none; border-radius:14px; cursor:pointer;
+    background:linear-gradient(135deg, var(--royal-soft), var(--royal) 60%, #2540C9);
+    color:#fff; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px;
+    letter-spacing:0.01em; box-shadow:0 14px 30px -8px rgba(58,92,255,0.55);
+    margin-bottom:16px;
+  }
+  .divider-or{ display:flex; align-items:center; gap:12px; margin:8px 0 18px; color:var(--ink-faint); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;}
+  .divider-or::before,.divider-or::after{ content:""; flex:1; height:1px; background:rgba(255,255,255,0.09);}
+
+  .btn-oauth{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:13px; border-radius:13px; margin-bottom:11px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    color:var(--ink); font-family:'Manrope',sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+
+  /* ========== TABLET LAYOUT ========== */
+  .tablet-frame{
+    width:768px; max-width:94vw; margin:0 auto;
+    background:linear-gradient(180deg, var(--bg-navy) 0%, var(--bg-deep) 100%);
+    border-radius:28px; padding:16px; border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 8px #0a0c18;
+    aspect-ratio:768/1024;
+    overflow:hidden;
+    position:relative;
+  }
+  .tablet-notch{
+    position:absolute; top:16px; left:50%; transform:translateX(-50%);
+    width:140px; height:26px; background:#04050D; border-radius:0 0 18px 18px; z-index:50;
+  }
+  .tablet-screen{
+    width:100%; height:100%; border-radius:24px;
+    background:linear-gradient(180deg, var(--bg-navy) 0%, var(--bg-deep) 100%);
+    overflow-y:auto; -ms-overflow-style:none; scrollbar-width:none;
+    padding:28px;
+  }
+  .tablet-screen::-webkit-scrollbar{display:none;}
+
+  .tablet-form{
+    max-width:420px; margin:0 auto;
+  }
+  .tablet-form h1{
+    font-family:'Fraunces',serif; font-size:28px; font-weight:600; margin:0 0 8px; color:#fff;
+  }
+  .tablet-form > p{
+    font-size:13.5px; color:var(--ink-dim); margin:0 0 24px; line-height:1.6;
+  }
+
+  /* ========== DESIGN TOKENS / SPECS ========== */
+  .specs-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:28px;
+  }
+  .spec-card{
+    background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:24px;
+    backdrop-filter:blur(20px);
+  }
+  .spec-card h3{
+    font-family:'Fraunces',serif; font-size:18px; margin:0 0 16px; color:#fff;
+  }
+  .spec-card .palette{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin:12px 0;
+  }
+  .spec-card .color-swatch{
+    aspect-ratio:1; border-radius:10px; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:flex-end; justify-content:center; padding:8px; font-size:9px; color:var(--ink-faint); overflow:hidden; text-align:center; line-height:1.2;
+  }
+  .spec-card .type-sample{
+    padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:10px;
+  }
+  .spec-card .type-sample:last-child{ border-bottom:none; margin-bottom:0;}
+  .spec-card .type-name{
+    font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:3px;
+  }
+  .type-display{ font-family:'Fraunces',serif; font-size:24px; font-weight:600; color:#fff; line-height:1.1;}
+  .type-body{ font-family:'Manrope',sans-serif; font-size:14px; color:var(--ink); line-height:1.5;}
+  .type-mono{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold-bright); letter-spacing:0.04em;}
+
+  .spacer-scale{
+    display:flex; flex-direction:column; gap:16px; padding:12px 0;
+  }
+  .spacer-item{
+    display:flex; align-items:center; gap:12px;
+  }
+  .spacer-item .bar{
+    height:8px; background:linear-gradient(90deg, var(--gold-bright), var(--royal-soft)); border-radius:4px;
+  }
+  .spacer-item .label{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint); width:80px; text-align:right;
+  }
+
+  .responsive-preview{
+    margin-top:32px; padding-top:32px; border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .responsive-preview h4{
+    font-size:12px; color:var(--gold-bright); text-transform:uppercase; letter-spacing:0.12em; margin:0 0 16px;
+    font-weight:700;
+  }
+  .breakpoints{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px;
+  }
+  .breakpoint{
+    background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px;
+    text-align:center;
+  }
+  .breakpoint .name{
+    font-size:13px; font-weight:700; color:#fff; margin-bottom:3px;
+  }
+  .breakpoint .size{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint);
+  }
+
+  @media (max-width:1024px){
+    .doc-header, .device-tabs, .container{ padding-left:24px; padding-right:24px; }
+    .specs-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <h1>Blue Sparks Kalasamithi</h1>
+  <p>Premium dark theme • Royal blue + gold • Glassmorphism • Production-ready responsive UI</p>
+</div>
+
+<div class="device-tabs">
+  <button class="active" onclick="showDevice('desktop')">💻 Desktop (1440px)</button>
+  <button onclick="showDevice('tablet')">📱 Tablet (768px)</button>
+  <button onclick="showDevice('mobile')">📱 Mobile (390px)</button>
+  <button onclick="showDevice('specs')">◆ Design Specs</button>
+</div>
+
+<!-- ============ DESKTOP LOGIN ============ -->
+<div class="container active" id="device-desktop">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0; height:100vh; margin:-40px -40px 0; border-radius:20px; overflow:hidden;">
+    <div style="padding:80px 72px; display:flex; flex-direction:column; justify-content:center; background:linear-gradient(180deg, var(--bg-navy) 0%, var(--bg-deep) 100%);">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:48px;">
+        <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, var(--gold-bright), var(--gold) 60%, #8a6a1e); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:22px; color:#1a1200; box-shadow:0 8px 24px rgba(207,165,59,0.4);">BS</div>
+        <div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; color:#fff;">Blue Sparks<br><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--gold-bright); text-transform:uppercase; display:block; margin-top:3px;">KALASAMITHI</span></div>
+      </div>
+      <div style="max-width:380px;">
+        <h1 style="font-family:'Fraunces',serif; font-size:32px; font-weight:600; margin:0 0 12px; color:#fff;">Welcome back</h1>
+        <p style="font-size:14px; color:var(--ink-dim); margin:0 0 32px; line-height:1.6;">Admins, artists, and booking agents — sign in to manage your dashboard.</p>
+
+        <div class="field">
+          <label>Email</label>
+          <div class="field-input">
+            <span class="ic">✉</span>
+            <input type="text" placeholder="you@bluesparks.in">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="field-input">
+            <span class="ic">🔒</span>
+            <input type="password" placeholder="••••••••••" value="••••••••••">
+            <span class="toggle-eye">SHOW</span>
+          </div>
+        </div>
+
+        <div class="row-between">
+          <div class="remember">
+            <div class="checkbox checked">✓</div>
+            Remember me
+          </div>
+          <a class="forgot" href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn-primary">Log In</button>
+
+        <div class="divider-or">or continue with</div>
+        <button class="btn-oauth">🔵 Continue with Google</button>
+        <button class="btn-oauth"> Continue with Apple</button>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg, rgba(58,92,255,0.1) 0%, rgba(207,165,59,0.05) 100%); position:relative; overflow:hidden; background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><pattern id=%22dots%22 patternUnits=%22userSpaceOnUse%22 width=%2240%22 height=%2240%22><circle cx=%2220%22 cy=%2220%22 r=%223%22 fill=%22%23CFA53B%22 opacity=%220.08%22/></pattern></defs><rect width=%22100%22 height=%22100%22 fill=%22url(%23dots)%22/></svg>'); display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:14px; text-align:center; padding:40px;">
+      <div>📸 Login hero image<br><span style="font-size:12px;">(Your uploaded photo appears here, unmodified)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TABLET LOGIN ============ -->
+<div class="container" id="device-tablet">
+  <div class="tablet-frame">
+    <div class="tablet-notch"></div>
+    <div class="tablet-screen">
+      <div class="tablet-form">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:32px;">
+          <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, var(--gold-bright), var(--gold) 60%, #8a6a1e); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:#1a1200; box-shadow:0 8px 24px rgba(207,165,59,0.4);">BS</div>
+          <div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; color:#fff;">Blue Sparks</div>
+        </div>
+        <h1 style="font-family:'Fraunces',serif; font-size:28px; font-weight:600; margin:0 0 8px; color:#fff;">Welcome back</h1>
+        <p style="font-size:13.5px; color:var(--ink-dim); margin:0 0 24px; line-height:1.6;">Admins, artists, and booking agents — sign in to manage your dashboard.</p>
+
+        <div class="field">
+          <label>Email</label>
+          <div class="field-input">
+            <span class="ic">✉</span>
+            <input type="text" placeholder="you@bluesparks.in">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="field-input">
+            <span class="ic">🔒</span>
+            <input type="password" placeholder="••••••••••" value="••••••••••">
+            <span class="toggle-eye">SHOW</span>
+          </div>
+        </div>
+
+        <div class="row-between">
+          <div class="remember">
+            <div class="checkbox checked">✓</div>
+            Remember me
+          </div>
+          <a class="forgot" href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn-primary">Log In</button>
+
+        <div class="divider-or">or continue with</div>
+        <button class="btn-oauth">🔵 Continue with Google</button>
+        <button class="btn-oauth"> Continue with Apple</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MOBILE LOGIN (from previous file) ============ -->
+<div class="container" id="device-mobile">
+  <p style="text-align:center; font-size:13px; color:var(--ink-faint); margin:0 0 24px;">📱 Mobile preview available in the previous HTML file (390px frame). This document shows desktop and tablet layouts + design specs.</p>
+  <div style="max-width:390px; margin:0 auto; padding:32px 20px; background:var(--card); border:1px solid var(--card-border); border-radius:16px; text-align:center;">
+    <p style="font-size:14px; color:var(--ink); margin:0;">See <strong>blue-sparks-mobile-preview.html</strong> for:<br>Mobile UI, booking list, form, calendar with full interaction</p>
+  </div>
+</div>
+
+<!-- ============ DESIGN SPECS ============ -->
+<div class="container" id="device-specs">
+  <div class="specs-grid">
+
+    <!-- Color Palette -->
+    <div class="spec-card">
+      <h3>Color Palette</h3>
+      <div class="palette">
+        <div class="color-swatch" style="background:#080B1A; border-color:rgba(255,255,255,0.1);">Deep<br>#080B1A</div>
+        <div class="color-swatch" style="background:#0E1330; border-color:rgba(255,255,255,0.1);">Navy<br>#0E1330</div>
+        <div class="color-swatch" style="background:#3A5CFF;">Royal<br>#3A5CFF</div>
+        <div class="color-swatch" style="background:#5B7BFF;">Soft<br>#5B7BFF</div>
+        <div class="color-swatch" style="background:#CFA53B;">Gold<br>#CFA53B</div>
+        <div class="color-swatch" style="background:#E8C766;">Gold Bright<br>#E8C766</div>
+        <div class="color-swatch" style="background:#3FCB8B;">Green<br>#3FCB8B</div>
+        <div class="color-swatch" style="background:#E9A23B;">Orange<br>#E9A23B</div>
+        <div class="color-swatch" style="background:#E85D5D;">Red<br>#E85D5D</div>
+      </div>
+      <div class="responsive-preview">
+        <h4>Status Colors</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="padding:8px; background:rgba(63,203,139,0.14); border:1px solid rgba(63,203,139,0.35); border-radius:8px; font-size:11px; color:#3FCB8B; font-weight:700;">✓ Confirmed</div>
+          <div style="padding:8px; background:rgba(233,162,59,0.14); border:1px solid rgba(233,162,59,0.35); border-radius:8px; font-size:11px; color:#E9A23B; font-weight:700;">⊘ Pending</div>
+          <div style="padding:8px; background:rgba(91,141,239,0.14); border:1px solid rgba(91,141,239,0.35); border-radius:8px; font-size:11px; color:#5B8DEF; font-weight:700;">✓ Completed</div>
+          <div style="padding:8px; background:rgba(232,93,93,0.14); border:1px solid rgba(232,93,93,0.35); border-radius:8px; font-size:11px; color:#E85D5D; font-weight:700;">✕ Cancelled</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="spec-card">
+      <h3>Typography</h3>
+      <div class="type-sample">
+        <div class="type-name">Display — Fraunces (Serif)</div>
+        <div class="type-display">Welcome back</div>
+        <div style="font-size:9px; color:var(--ink-faint); margin-top:6px;">32px / 600 weight · Premium, distinctive headings</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-name">Body — Manrope (Sans)</div>
+        <div class="type-body">Admins, artists, and booking agents — sign in to manage your dashboard.</div>
+        <div style="font-size:9px; color:var(--ink-faint); margin-top:6px;">14–15px · Friendly, legible body text</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-name">Mono — JetBrains Mono</div>
+        <div class="type-mono">BSK-2026-0142 · ₹85,000 · 9:41 AM</div>
+        <div style="font-size:9px; color:var(--ink-faint); margin-top:6px;">10–14px · IDs, amounts, time, data</div>
+      </div>
+    </div>
+
+    <!-- Spacing & Grid -->
+    <div class="spec-card">
+      <h3>Spacing & Grid</h3>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px; color:var(--ink-faint); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700;">Base unit: 4px</div>
+        <div class="spacer-scale">
+          <div class="spacer-item"><div class="bar" style="width:40px;"></div><span class="label">4px (xs)</span></div>
+          <div class="spacer-item"><div class="bar" style="width:60px;"></div><span class="label">12px (sm)</span></div>
+          <div class="spacer-item"><div class="bar" style="width:100px;"></div><span class="label">20px (md)</span></div>
+          <div class="spacer-item"><div class="bar" style="width:140px;"></div><span class="label">32px (lg)</span></div>
+          <div class="spacer-item"><div class="bar" style="width:180px;"></div><span class="label">48px (xl)</span></div>
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--ink-faint); padding-top:12px; border-top:1px solid rgba(255,255,255,0.08);">
+        <strong>Border radius:</strong> 8px (small), 12px (form), 14px (buttons), 16px (cards), 20px (large), 24px (rounded corners)
+      </div>
+    </div>
+
+    <!-- Shadows & Glass -->
+    <div class="spec-card">
+      <h3>Effects</h3>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px; color:var(--ink-faint); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700;">Glassmorphism</div>
+        <div style="background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:16px; backdrop-filter:blur(20px); font-size:13px; color:var(--ink);">
+          Backdrop blur: 20–24px · Border: rgba(255,255,255,0.09) · RGBA fill: 0.045
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px; color:var(--ink-faint); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700;">Shadows</div>
+        <div style="font-size:11px; color:var(--ink-dim); line-height:1.6;">
+          <strong>Subtle:</strong> 0 2px 8px rgba(0,0,0,0.4)<br>
+          <strong>Card:</strong> 0 18px 34px -18px rgba(0,0,0,0.5)<br>
+          <strong>Elevated:</strong> 0 40px 100px -20px rgba(0,0,0,0.7)<br>
+          <strong>Accent:</strong> 0 14px 30px -8px rgba(58,92,255,0.55)
+        </div>
+      </div>
+    </div>
+
+    <!-- Breakpoints -->
+    <div class="spec-card">
+      <h3>Responsive Breakpoints</h3>
+      <div class="breakpoints">
+        <div class="breakpoint">
+          <div class="name">Mobile</div>
+          <div class="size">390px</div>
+        </div>
+        <div class="breakpoint">
+          <div class="name">Tablet</div>
+          <div class="size">768px</div>
+        </div>
+        <div class="breakpoint">
+          <div class="name">Desktop</div>
+          <div class="size">1440px+</div>
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--ink-dim); margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+        <strong>Philosophy:</strong> Touch-friendly controls (min 44px tap target), pixel-perfect spacing, responsive grids, max-width containers for readability.
+      </div>
+    </div>
+
+    <!-- Component Tokens -->
+    <div class="spec-card">
+      <h3>Component Standards</h3>
+      <div style="font-size:12px; color:var(--ink-dim); line-height:1.8;">
+        <strong style="color:var(--ink);">Buttons</strong><br>
+        Primary: Royal gradient, 14–15px bold, 44px tall min, 14px shadow radius<br>
+        Secondary: 0.05 bg, border, no gradient<br><br>
+        <strong style="color:var(--ink);">Form Fields</strong><br>
+        0.04 bg, 0.09 border, 13px radius, icons left, 12–14px input<br><br>
+        <strong style="color:var(--ink);">Cards</strong><br>
+        0.045 bg, glassmorphism, 20px border radius, subtle shadow<br><br>
+        <strong style="color:var(--ink);">Status Pills</strong><br>
+        14% tinted bg, 35% border, 8px padding, monospace label, 100px radius
+      </div>
+    </div>
+
+    <!-- Interaction -->
+    <div class="spec-card">
+      <h3>Motion & Interaction</h3>
+      <div style="font-size:12px; color:var(--ink-dim); line-height:1.8;">
+        <strong style="color:var(--ink);">Timing</strong><br>
+        Hover: 0.15–0.2s ease<br>
+        Sheet open: 0.3s cubic-bezier<br>
+        Field focus: 0.2s ease<br><br>
+        <strong style="color:var(--ink);">Focus States</strong><br>
+        Blue border + 3px shadow with 18% opacity<br>
+        Keyboard visible on all interactive elements<br><br>
+        <strong style="color:var(--ink);">Micro-interactions</strong><br>
+        Button press: scale 0.98<br>
+        Icon toggle: 0.15s rotate<br>
+        Toast fade-in: 0.25s ease-out
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showDevice(name){
+  document.querySelectorAll('.container').forEach(c=>c.classList.remove('active'));
+  document.getElementById('device-'+name).classList.add('active');
+  document.querySelectorAll('.device-tabs button').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+
+</body>
+</html>
